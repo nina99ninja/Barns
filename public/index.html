@@ -1021,16 +1021,24 @@ async function boot() {
     document.getElementById('shint').classList.add('show');
   }, 900);
 
-  await waitForVideo();
+  try {
+    await waitForVideo();
 
-  // Prime seeking
-  videoReady = true;
-  video.currentTime = 0;
-  await new Promise(r => video.addEventListener('seeked', r, { once: true }));
-  drawFrame();
+    // Prime first frame — race against 2 s so we never deadlock if the
+    // server doesn't support HTTP range requests (required for seeked to fire)
+    videoReady = true;
+    video.currentTime = 0;
+    await Promise.race([
+      new Promise(r => video.addEventListener('seeked', r, { once: true })),
+      new Promise(r => setTimeout(r, 2000))
+    ]);
+    drawFrame();
 
-  // Fade out loading
-  await new Promise(r => setTimeout(r, 160));
+    await new Promise(r => setTimeout(r, 160));
+  } catch(e) {
+    // Video failed entirely — continue so the menu still shows
+  }
+
   document.getElementById('loading').classList.add('out');
   await new Promise(r => setTimeout(r, 1000));
   document.getElementById('loading').style.display = 'none';
