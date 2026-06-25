@@ -112,10 +112,7 @@ header.solid{
 
 .cat-head{
   padding:96px 44px 28px;text-align:center;
-  opacity:0;transform:translateY(20px);
-  transition:opacity .9s ease,transform .9s ease;
 }
-.cat-head.visible{opacity:1;transform:none}
 
 .cat-en{
   font-family:'Cormorant Garamond',serif;
@@ -141,11 +138,8 @@ header.solid{
 
 /* DRINK CARD */
 .card{
-  opacity:0;transform:translateY(36px);
-  transition:opacity .85s cubic-bezier(.22,1,.36,1),transform .85s cubic-bezier(.22,1,.36,1);
   background:#f3e9d6;
 }
-.card.show{opacity:1;transform:none}
 
 .card-art{
   position:relative;width:100%;padding-top:125%;overflow:hidden;
@@ -347,10 +341,7 @@ header.solid{
   padding:22px 30px;
   display:flex;align-items:center;justify-content:space-between;gap:20px;
   border-top:1px solid rgba(120,80,30,.12);
-  opacity:0;transform:translateY(20px);
-  transition:opacity .85s cubic-bezier(.22,1,.36,1),transform .85s cubic-bezier(.22,1,.36,1);
 }
-.text-item.show{opacity:1;transform:none}
 .ti-left{flex:1}
 
 /* ── B-BOX MID IMAGE ── */
@@ -563,9 +554,8 @@ header.solid{
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
-  gsap.registerPlugin(ScrollTrigger);
-  ScrollTrigger.normalizeScroll(true);
-</script>// ── PALETTE LIBRARY ───────────────────────────────────
+gsap.registerPlugin(ScrollTrigger);
+// ── PALETTE LIBRARY ───────────────────────────────────
 // Each: [dark, mid, light, glow]
 const P = {
   G:  ['#0a2014','#1a5d30','#2da860','#52d886'], // green
@@ -961,23 +951,37 @@ function onScroll() {
 
 window.addEventListener('scroll', onScroll, { passive: true });
 
-// ── INTERSECTION REVEAL ───────────────────────────────
+// ── GSAP SCROLLTRIGGER REVEAL ─────────────────────────
 function initReveal() {
-  // Cards
-  const cardObs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('show'); cardObs.unobserve(e.target); }
+  // Drink cards and text-only items
+  gsap.utils.toArray('.card, .text-item').forEach(function(el) {
+    gsap.from(el, {
+      opacity: 0,
+      y: 36,
+      duration: 0.85,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 92%',
+        once: true
+      }
     });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.card, .text-item').forEach(c => cardObs.observe(c));
+  });
 
-  // Category heads
-  const headObs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); headObs.unobserve(e.target); }
+  // Category headings
+  gsap.utils.toArray('.cat-head').forEach(function(el) {
+    gsap.from(el, {
+      opacity: 0,
+      y: 20,
+      duration: 0.9,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 85%',
+        once: true
+      }
     });
-  }, { threshold: 0.15 });
-  document.querySelectorAll('.cat-head').forEach(h => headObs.observe(h));
+  });
 }
 
 // ── LOADING & BOOT ────────────────────────────────────
