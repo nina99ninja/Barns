@@ -108,7 +108,45 @@ header.solid{
   will-change:background-position-y;
 }
 
-.cat-block{}
+/* ── QUICK NAV ── */
+#cat-nav{
+  position:sticky;top:64px;z-index:100;
+  background:rgba(13,50,26,.96);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  padding:18px 44px;
+  display:flex;justify-content:center;gap:12px;flex-wrap:wrap;
+}
+.cn-btn{
+  display:flex;flex-direction:row;align-items:center;gap:12px;
+  padding:13px 28px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:100px;text-decoration:none;
+  transition:background .25s,transform .25s,border-color .25s;
+}
+.cn-btn:hover{
+  background:rgba(255,255,255,.16);
+  border-color:rgba(255,255,255,.32);
+  transform:translateY(-2px);
+}
+.cn-icon{
+  width:26px;height:28px;flex-shrink:0;
+  fill:none;stroke:rgba(255,255,255,.82);stroke-width:1.5;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+.cn-text{display:flex;flex-direction:column;gap:2px}
+.cn-en{
+  font-family:'Cormorant Garamond',serif;
+  font-size:17px;font-weight:300;color:#fff;letter-spacing:.06em;line-height:1;
+}
+.cn-ar{font-size:10px;color:rgba(255,255,255,.5);direction:rtl}
+@media(max-width:520px){
+  #cat-nav{padding:14px 16px;gap:8px}
+  .cn-btn{padding:11px 18px;gap:9px}
+  .cn-en{font-size:15px}
+}
+
+.cat-block{scroll-margin-top:155px}
 
 .cat-head{
   padding:96px 44px 28px;text-align:center;
@@ -397,7 +435,32 @@ header.solid{
 </section>
 
 <!-- ── MENU ── (built by JS) -->
-<section id="menu"><div id="menu-bg"></div></section>
+<section id="menu">
+  <div id="menu-bg"></div>
+  <nav id="cat-nav">
+    <a href="#cat-cold" class="cn-btn">
+      <svg class="cn-icon" viewBox="0 0 60 80"><use href="#ico-iced"/></svg>
+      <span class="cn-text">
+        <span class="cn-en">Cold Drinks</span>
+        <span class="cn-ar">المشروبات الباردة</span>
+      </span>
+    </a>
+    <a href="#cat-hot" class="cn-btn">
+      <svg class="cn-icon" viewBox="0 0 60 80"><use href="#ico-hot"/></svg>
+      <span class="cn-text">
+        <span class="cn-en">Hot Drinks</span>
+        <span class="cn-ar">المشروبات الساخنة</span>
+      </span>
+    </a>
+    <a href="#cat-bbox" class="cn-btn">
+      <svg class="cn-icon" viewBox="0 0 80 80"><use href="#ico-box"/></svg>
+      <span class="cn-text">
+        <span class="cn-en">B-Box</span>
+        <span class="cn-ar">بی بوکس</span>
+      </span>
+    </a>
+  </nav>
+</section>
 
 <!-- ── ADD-ONS ── -->
 <section id="addons">
@@ -750,6 +813,9 @@ function buildMenu() {
   MENU.forEach(cat => {
     const block = document.createElement('div');
     block.className = 'cat-block';
+    if (cat.cat.en === 'Cold Beverages') block.id = 'cat-cold';
+    if (cat.cat.en === 'Hot Beverages')  block.id = 'cat-hot';
+    if (cat.cat.en === 'B-Box')          block.id = 'cat-bbox';
 
     // Category header
     const head = document.createElement('div');
