@@ -64,7 +64,7 @@ header.solid{
 /* ── HERO ── */
 #hero{height:600vh;position:relative}
 #hero-stick{
-  position:sticky;top:0;width:100vw;height:100vh;overflow:hidden;background:#030303
+  position:sticky;top:0;width:100vw;height:100vh;height:100dvh;overflow:hidden;background:#030303
 }
 #hero-canvas{display:block;width:100%;height:100%;object-fit:cover}
 
@@ -110,7 +110,7 @@ header.solid{
 
 /* ── QUICK NAV ── */
 #cat-nav{
-  position:sticky;top:64px;z-index:100;
+  position:relative;z-index:100;
   background:rgba(13,50,26,.96);
   backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
   padding:18px 44px;
@@ -146,7 +146,7 @@ header.solid{
   .cn-en{font-size:15px}
 }
 
-.cat-block{scroll-margin-top:155px}
+.cat-block{scroll-margin-top:32px}
 
 .cat-head{
   padding:96px 44px 28px;text-align:center;
@@ -945,8 +945,10 @@ let seekPending = false;
 
 function resizeCanvas() {
   const dpr = Math.max(window.devicePixelRatio || 1, 2);
-  canvas.width  = window.innerWidth  * dpr;
-  canvas.height = window.innerHeight * dpr;
+  const vw  = window.innerWidth;
+  const vh  = (window.visualViewport ? window.visualViewport.height : window.innerHeight);
+  canvas.width  = vw * dpr;
+  canvas.height = vh * dpr;
   canvas.style.width  = '100%';
   canvas.style.height = '100%';
   ctx.imageSmoothingEnabled = true;
@@ -955,6 +957,7 @@ function resizeCanvas() {
 }
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
+if (window.visualViewport) window.visualViewport.addEventListener('resize', resizeCanvas);
 
 function drawFrame() {
   if (!videoReady || video.readyState < 2) return;
